@@ -19,8 +19,6 @@ import (
 	"flag"
 	"os"
 
-	dioscuriv1 "github.com/amazeeio/dioscuri/api/v1"
-	"github.com/amazeeio/dioscuri/controllers"
 	oappsv1 "github.com/openshift/api/apps/v1"
 	routev1 "github.com/openshift/api/route/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -28,6 +26,9 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	dioscuriv1 "github.com/amazeeio/dioscuri/api/v1"
+	"github.com/amazeeio/dioscuri/controllers"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -74,6 +75,14 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "RouteMigrate")
+		os.Exit(1)
+	}
+	if err = (&controllers.IngressMigrateReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("IngressMigrate"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "IngressMigrate")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder
