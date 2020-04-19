@@ -28,13 +28,31 @@ type IngressMigrateSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of IngressMigrate. Edit IngressMigrate_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// FooBar string `json:"fooBar,omitempty"`
+
+	// Migrate is an example field of IngressMigrate. Edit ingressMigrate_types.go to remove/update
+	DestinationNamespace string              `json:"destinationNamespace,omitempty"`
+	IngressPaths         IngressMigratePaths `json:"ingress,omitempty"`
 }
 
 // IngressMigrateStatus defines the observed state of IngressMigrate
 type IngressMigrateStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	Conditions []IngressMigrateConditions `json:"conditions,omitempty"`
+}
+
+// IngressMigrateConditions defines the observed conditions of the migrations
+type IngressMigrateConditions struct {
+	LastTransitionTime string `json:"lastTransitionTime"`
+	Status             string `json:"status"`
+	Type               string `json:"type"`
+	Condition          string `json:"condition"`
+}
+
+type IngressMigratePaths struct {
+	ActivePaths  string `json:"activePaths"`
+	StandbyPaths string `json:"standbyPaths"`
 }
 
 // +kubebuilder:object:root=true
